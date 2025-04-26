@@ -1,24 +1,23 @@
-import SandboxWorker from './worker.ts?worker'
+import { createIFrame } from './iframe';
 
 class Kernel {
-    processes = new Map<number, Worker>();
-    pidIndex = 0;
+  processes = new Map<number, HTMLIFrameElement>();
+  pidIndex = 0;
 
-    async spawn(scriptUrl: string) {
-			const worker = new SandboxWorker()
-			this.processes.set(this.pidIndex, worker)
-			this.pidIndex++
+  async spawn(scriptUrl: string) {
+		const iframe = createIFrame(this.pidIndex, scriptUrl)
 
-			worker.postMessage({ type: 0x00, url: scriptUrl })
+    this.processes.set(this.pidIndex, iframe)
+    this.pidIndex++
+	}
+
+	kill(pid: number) {
+	  const iframe = this.processes.get(pid);
+		if (iframe) {
+			iframe.remove()
+			this.processes.delete(pid)
 		}
-
-		kill(pid: number) {
-			const worker = this.processes.get(pid);
-			if (worker) {
-				worker.terminate();
-				this.processes.delete(pid)
-			}
-		}
+	}
 }
 
 const kernel = new Kernel();
