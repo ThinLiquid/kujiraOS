@@ -22,7 +22,7 @@ class System {
     'url'
   ]
 
-  const fakeWindow = { ...window, top: window }
+  const fakeWindow = { ...window, top: window, parent: window }
 
   const fn = new Function(
     ...thingsToBeNull,
