@@ -31,7 +31,7 @@ export class EventHandle {
 
 window.handle = new EventHandle()
 
-export const createIFrame = (pid: number, script: string): HTMLIFrameElement => {
+export const createIFrame = (pid: number, script: string, args: any[]): HTMLIFrameElement => {
   const iframe = document.createElement('iframe');
 
   iframe.srcdoc = `
@@ -39,16 +39,11 @@ export const createIFrame = (pid: number, script: string): HTMLIFrameElement => 
   <script src="${runtimeUrl}" data-url="${script}"></script>
   `
 
-  iframe.style.visibility = 'hidden'
+  iframe.style.display = 'none'
 
-  window.handle.on(pid, 'state', (state) => {
-    console.log(state)
-    if (state === 'hidden' || state === 'visible') {
-      iframe.style.visibility = state 
-    }
-  })
- 
-  document.body.appendChild(iframe) 
+  document.body.appendChild(iframe)
+
+  iframe.contentWindow!.args = args
 
   return iframe
 }

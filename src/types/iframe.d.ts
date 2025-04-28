@@ -7,6 +7,7 @@ declare global {
 
     // iframe runtime sided
     pid: number
+    args: any[]
   }
 }
 
